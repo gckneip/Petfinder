@@ -1,7 +1,7 @@
--- DOMAIN 
+-- DOMAIN
 
 -- RAÇAS
-INSERT INTO domain.eraca (nome) VALUES
+INSERT INTO domain.eraca (nome) values
 ('Poodle'), ('Labrador'), ('Vira-lata'), ('Persa'), ('Siamês');
 
 -- ESPÉCIES
@@ -57,7 +57,7 @@ INSERT INTO estabelecimentos.veterinarias (cnpj) VALUES
 ('00000000000200');
 
 -- PROFISSIONAIS VETERINÁRIAS
-INSERT INTO estabelecimentos.profissionaisveterinarias (cnpj, cpf) VALUES
+INSERT INTO estabelecimentos.profissionais_veterinarias (cnpj, cpf) VALUES
 ('00000000000200', '33333333333'),
 ('00000000000200', '44444444444');
 
@@ -65,7 +65,7 @@ INSERT INTO estabelecimentos.profissionaisveterinarias (cnpj, cpf) VALUES
 INSERT INTO especialidades.especialidades (nome) VALUES
 ('Clínico Geral'), ('Cirurgião Veterinário'), ('Dermatologista');
 
-INSERT INTO especialidades.profissionaisespecialidades (idespecialidade, cpfprofissional) VALUES
+INSERT INTO especialidades.profissionais_especialidades (idespecialidade, cpfprofissional) VALUES
 (1, '33333333333'),
 (2, '44444444444');
 
@@ -83,7 +83,7 @@ INSERT INTO bichos.afeccoes (nome, gravidade, contagiosa) VALUES
 ('Dermatite', 2, FALSE),
 ('Cinomose', 3, TRUE);
 
-INSERT INTO bichos.afeccoesbichos (idafeccao, idbicho, datainicio, datafim) VALUES
+INSERT INTO bichos.afeccoes_bichos (idafeccao, idbicho, data_inicio, data_fim) VALUES
 (1, 1, '2025-01-01', '2025-01-10'),
 (2, 3, '2025-02-01', '2025-02-15');
 
@@ -99,7 +99,7 @@ INSERT INTO itens.itens (nome, codbarra) VALUES
 ('Coleira', '9876543210987'),
 ('Shampoo Pet', NULL);
 
-INSERT INTO itens.petshopitens (iditem, petshop) VALUES
+INSERT INTO itens.petshop_itens (iditem, petshop) VALUES
 (1, '00000000000100'),
 (2, '00000000000100'),
 (3, '00000000000100');
@@ -108,7 +108,7 @@ INSERT INTO itens.petshopitens (iditem, petshop) VALUES
 INSERT INTO itens.vacinas (nome) VALUES
 ('Antirrábica'), ('V8'), ('V10');
 
-INSERT INTO itens.bichosvacinas (idvacina, idbicho) VALUES
+INSERT INTO itens.bichos_vacinas (idvacina, idbicho) VALUES
 (1, 1), (2, 1), (1, 2), (3, 3);
 
 -- MEDICAMENTOS
@@ -116,35 +116,35 @@ INSERT INTO itens.medicamentos (registromapa, nome, posologia) VALUES
 ('BR12345', 'Vermífugo', '1 comprimido a cada 3 meses'),
 (NULL, 'Antibiótico X', '2 vezes ao dia por 7 dias');
 
-INSERT INTO itens.bichosmedicamentos (idmedicamento, idbicho) VALUES
+INSERT INTO itens.bichos_medicamentos (idmedicamento, idbicho) VALUES
 (1, 1), (2, 3);
 
 
 -- Endereços usuários
-INSERT INTO enderecos.enderecos (bairro, logradouro, numero, cep, cpfusuario)
+INSERT INTO enderecos.enderecos (idbairro, rua, numero, cpfusuario) --adicionar cep?
 VALUES
-(1, 'Rua das Acácias', '101', '12345000', '11111111111'),
-(2, 'Avenida Brasil', '202', '12345001', '22222222222'),
-(3, 'Travessa das Palmeiras', '303', '12345002', '33333333333'),
-(4, 'Rua do Comércio', '404', '12345003', '44444444444'),
-(5, 'Alameda dos Ipês', '505', '12345004', '55555555555');
+(1, 'Rua das Acácias', '101', '11111111111'),
+(2, 'Avenida Brasil', '202', '22222222222'),
+(3, 'Travessa das Palmeiras', '303', '33333333333'),
+(4, 'Rua do Comércio', '404', '44444444444'),
+(5, 'Alameda dos Ipês', '505', '55555555555');
 
 
 -- Endereços Bichos
 
-INSERT INTO enderecos.enderecos (bairro, logradouro, numero, cep, idbicho)
+INSERT INTO enderecos.enderecos (idbairro, rua, numero, idbicho) --adicionar cep?
 VALUES
-(1, 'Rua dos Animais', '10', '22345000', 1),
-(2, 'Avenida Pet Lovers', '20', '22345001', 2),
-(3, 'Praça dos Gatos', '30', '22345002', 3),
-(4, 'Travessa dos Cães', '40', '22345003', 4);
+(1, 'Rua dos Animais', '22345000', 1),
+(2, 'Avenida Pet Lovers', '22345001', 2),
+(3, 'Praça dos Gatos', '22345002', 3),
+(4, 'Travessa dos Cães', '22345003', 4);
 
 -- Endereços estabelecimentos
-
-INSERT INTO enderecos.enderecos (bairro, logradouro, numero, cep, cnpjestabelecimento)
+--
+INSERT INTO enderecos.enderecos (idbairro, rua, numero, cnpjestabelecimento) --adicionar cep?
 VALUES
-(1, 'Rua do Petshop', '500', '32345000', '00000000000100'),
-(2, 'Avenida da Veterinária', '600', '32345001', '00000000000200');
+(1, 'Rua do Petshop', '500', '00000000000100'),
+(2, 'Avenida da Veterinária', '600', '00000000000200');
 
 
 

@@ -5,7 +5,7 @@ JOIN domain.eraca r ON b.raca = r.idraca
 JOIN domain.eespecie e ON b.especie = e.idespecie;
 
 -- 2) Mostra todas as doações com nome do doador e do bicho 
-SELECT d.iddoacao, u.nome AS doador, b.nome AS bicho, d.valor, d.data
+SELECT d.idbicho, u.nome AS doador, b.nome AS bicho, d.valor, d.data
 FROM bichos.doacoes d
 JOIN usuarios.usuarios u ON d.cpfusuario = u.cpf
 JOIN bichos.bichos b ON d.idbicho = b.idbicho;
@@ -14,7 +14,7 @@ JOIN bichos.bichos b ON d.idbicho = b.idbicho;
 SELECT p.cpf, u.nome AS profissional, e.nome AS especialidade
 FROM usuarios.profissionais p
 JOIN usuarios.usuarios u ON p.cpf = u.cpf
-JOIN especialidades.profissionaisespecialidades pe ON p.cpf = pe.cpfprofissional
+JOIN especialidades.profissionais_especialidades pe ON p.cpf = pe.cpfprofissional
 JOIN especialidades.especialidades e ON pe.idespecialidade = e.idespecialidade;
 
 -- 4) Total de doações recebidas por cada bicho (agrupamento)
@@ -26,10 +26,10 @@ ORDER BY total_doacoes DESC;
 
 -- 5) Bichos e suas afecções, com gravidade
 SELECT b.nome AS bicho, a.nome AS afecao, g.nome AS gravidade
-FROM bichos.afeccoesbichos ab
+FROM bichos.afeccoes_bichos ab
 JOIN bichos.bichos b ON ab.idbicho = b.idbicho
 JOIN bichos.afeccoes a ON ab.idafeccao = a.idafeccao
-JOIN domain.egravidade g ON a.gravidade = g.idegravidade;
+JOIN domain.egravidade g ON a.gravidade = g.idgravidade;
 
 -- 6) Itens vendidos por cada petshop
 SELECT ps.cnpj, e.nome AS petshop, i.nome AS item

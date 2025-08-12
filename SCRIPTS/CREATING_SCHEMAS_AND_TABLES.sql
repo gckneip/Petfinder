@@ -1,5 +1,6 @@
 -- Script corrigido com schemas, tipos, referências e sintaxe compatível com PostgreSQL
 
+-- Testar executar todo o script
 BEGIN;
 
 -- SCHEMA: Domain
@@ -154,7 +155,7 @@ CREATE TABLE enderecos.enderecos (
 	idendereco SERIAL PRIMARY KEY,
 	rua VARCHAR(100) NOT NULL,
 	numero VARCHAR(10) NOT NULL,
-	complemente VARCHAR(50),
+	complemento VARCHAR(50),
 	idbairro INT NOT NULL,
 	cpfusuario VARCHAR(11),
 	idbicho INT,
@@ -182,6 +183,7 @@ CREATE TABLE itens.itens (
 CREATE TABLE itens.petshop_itens (
 	iditem INT NOT NULL,
 	petshop VARCHAR(14) NOT NULL,
+	preco NUMERIC(12,2) not NULL,
 	PRIMARY KEY(iditem, petshop),
 	FOREIGN KEY (iditem) REFERENCES itens.itens(iditem),
 	FOREIGN KEY (petshop) REFERENCES estabelecimentos.petshops(cnpj)

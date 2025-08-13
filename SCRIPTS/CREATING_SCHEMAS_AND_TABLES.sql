@@ -1,8 +1,3 @@
--- Script corrigido com schemas, tipos, referências e sintaxe compatível com PostgreSQL
-
--- Testar executar todo o script
-BEGIN;
-
 -- SCHEMA: Domain
 CREATE SCHEMA domain;
 
@@ -143,7 +138,7 @@ CREATE TABLE bichos.afeccoes_bichos (
 CREATE TABLE bichos.doacoes (
 	idbicho INT NOT NULL,
 	cpfusuario VARCHAR(11) NOT NULL,
-	data DATE NOT NULL,
+	data TIMESTAMP NOT NULL,
 	valor NUMERIC(8,2) NOT NULL,
 	PRIMARY KEY(idbicho, cpfusuario, data),
 	FOREIGN KEY (idbicho) REFERENCES bichos.bichos(idbicho),
@@ -224,5 +219,3 @@ CREATE TABLE itens.bichos_medicamentos (
 	FOREIGN KEY (idmedicamento) REFERENCES itens.medicamentos(idmedicamento),
 	FOREIGN KEY (idbicho) REFERENCES bichos.bichos(idbicho)
 );
-
-ROLLBACK;

@@ -17,7 +17,7 @@ JOIN usuarios.usuarios u ON p.cpf = u.cpf
 JOIN especialidades.profissionais_especialidades pe ON p.cpf = pe.cpfprofissional
 JOIN especialidades.especialidades e ON pe.idespecialidade = e.idespecialidade;
 
--- 4) Total de doações recebidas por cada bicho (agrupamento)
+-- 4) Total de doações recebidas por cada bicho
 SELECT b.nome AS bicho, SUM(d.valor) AS total_doacoes
 FROM bichos.bichos b
 LEFT JOIN bichos.doacoes d ON b.idbicho = d.idbicho
@@ -32,7 +32,7 @@ JOIN bichos.afeccoes a ON ab.idafeccao = a.idafeccao
 JOIN domain.egravidade g ON a.gravidade = g.idgravidade;
 
 -- 6) Itens vendidos por cada petshop
-SELECT ps.cnpj, e.nome AS petshop, i.nome AS item
-FROM itens.petshopitens ps
+SELECT ps.petshop, ps.preco AS preço, e.nome AS petshop, i.nome AS item
+FROM itens.petshop_itens ps
 JOIN itens.itens i ON ps.iditem = i.iditem
 JOIN estabelecimentos.estabelecimentos e ON ps.petshop = e.cnpj;

@@ -2,17 +2,17 @@
 CREATE SCHEMA domain;
 
 CREATE TABLE domain.eraca (
-	idraca SMALLSERIAL PRIMARY KEY,
+	idraca SERIAL PRIMARY KEY,
 	nome VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE domain.eespecie (
-	idespecie SMALLSERIAL PRIMARY KEY,
+	idespecie SERIAL PRIMARY KEY,
 	nome VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE domain.egravidade (
-	idgravidade SMALLSERIAL PRIMARY KEY,
+	idgravidade SERIAL PRIMARY KEY,
 	nome VARCHAR(50) NOT NULL
 );
 
@@ -102,6 +102,7 @@ CREATE TABLE bichos.bichos (
 	raca SMALLINT NOT NULL REFERENCES domain.eraca(idraca),
 	especie SMALLINT NOT NULL REFERENCES domain.eespecie(idespecie),
 	sexo CHAR(1) NOT NULL,
+	cor varchar(50) NOT NULL,
 	peso NUMERIC(10,2) NOT NULL,
 	castrado BOOLEAN NOT NULL,
 	usuariocadastro VARCHAR(11) NOT NULL REFERENCES usuarios.usuarios(cpf),
@@ -129,8 +130,8 @@ CREATE TABLE bichos.afeccoes_bichos (
 	idafeccao INT NOT NULL,
 	idbicho INT NOT NULL,
 	data_inicio DATE NOT NULL,
-	data_fim DATE NOT NULL,
-	PRIMARY KEY (idafeccao, idbicho, data_inicio, data_fim),
+	data_fim DATE NULL,
+	PRIMARY KEY (idafeccao, idbicho, data_inicio),
 	FOREIGN KEY (idafeccao) REFERENCES bichos.afeccoes(idafeccao),
 	FOREIGN KEY (idbicho) REFERENCES bichos.bichos(idbicho)
 );
@@ -200,7 +201,11 @@ CREATE TABLE itens.vacinas (
 CREATE TABLE itens.bichos_vacinas (
 	idvacina INT NOT NULL,
 	idbicho INT NOT NULL,
-	PRIMARY KEY(idvacina, idbicho),
+	data TIMESTAMP NOT NULL,
+	dose INT NOT NULL,
+	datainicio TIMESTAMP NOT NULL,
+	datafim TIMESTAMP NULL,
+	PRIMARY KEY(idvacina, idbicho, data),
 	FOREIGN KEY (idvacina) REFERENCES itens.vacinas(idvacina),
 	FOREIGN KEY (idbicho) REFERENCES bichos.bichos(idbicho)
 );
@@ -215,7 +220,8 @@ CREATE TABLE itens.medicamentos (
 CREATE TABLE itens.bichos_medicamentos (
 	idmedicamento INT NOT NULL,
 	idbicho INT NOT NULL,
-	PRIMARY KEY(idmedicamento, idbicho),
+	data TIMESTAMP NOT NULL,
+	PRIMARY KEY(idmedicamento, idbicho, data),
 	FOREIGN KEY (idmedicamento) REFERENCES itens.medicamentos(idmedicamento),
 	FOREIGN KEY (idbicho) REFERENCES bichos.bichos(idbicho)
 );

@@ -71,12 +71,12 @@ INSERT INTO especialidades.profissionais_especialidades (idespecialidade, cpfpro
 (2, '44444444444');
 
 -- BICHOS
-INSERT INTO bichos.bichos (nome, raca, especie, sexo, peso, castrado, usuariocadastro, datacadastro)
+INSERT INTO bichos.bichos (nome, raca, especie, sexo, cor, peso, castrado, usuariocadastro, datacadastro)
 VALUES
-('Lupi Garou', 2, 1, 'M', 25.0, TRUE, '11111111111', CURRENT_DATE),
-('Antonietta', 1, 1, 'F', 17.0, TRUE, '22222222222', CURRENT_DATE),
-('Bigodôncio', 4, 2, 'M', 2.6, FALSE, '33333333333', CURRENT_DATE),
-('Bete Barraco', 5, 2, 'F', 3.2, TRUE, '44444444444', CURRENT_DATE);
+('Lupi Garou', 2, 1, 'M', 'branco', 25.0, TRUE, '11111111111', CURRENT_DATE),
+('Antonietta', 1, 1, 'F', 'frajola', 17.0, TRUE, '22222222222', CURRENT_DATE),
+('Bigodôncio', 4, 2, 'M', 'malhado',2.6, FALSE, '33333333333', CURRENT_DATE),
+('Bete Barraco', 5, 2, 'F', 'preta',3.2, TRUE, '44444444444', CURRENT_DATE);
 
 
 -- AFECÇÕES 
@@ -105,8 +105,8 @@ INSERT INTO itens.itens (nome, codbarra) VALUES
 
 -- ITENS DO PETSHOP
 INSERT INTO itens.petshop_itens (iditem, petshop, preco) VALUES
-(1, '00000000000100', 12.10),
-(2, '00000000000100', 99.99),
+(2, '00000000000100', 12.10),
+(1, '00000000000100', 99.99),
 (3, '00000000000100', 45.00);
 
 -- VACINAS
@@ -114,8 +114,12 @@ INSERT INTO itens.vacinas (nome) VALUES
 ('Antirrábica'), ('V8'), ('V10');
 
 -- VACINAS DOS BICHOS
-INSERT INTO itens.bichos_vacinas (idvacina, idbicho) VALUES
-(1, 1), (2, 1), (1, 2), (3, 3);
+INSERT INTO itens.bichos_vacinas (idvacina, idbicho, data, dose, datainicio, datafim) VALUES
+(1, 1, '01-01-2025', 1, '01-01-2025', null),
+(1, 1, '02-01-2025', 2, '01-01-2025', '02-01-2025'),
+(2, 3, '05-01-2025', 1,'05-01-2025', null), 
+(2, 3, '06-01-2025', 2,'05-01-2025', null), 
+(2, 3, '07-01-2025', 3,'05-01-2025', '07-01-2025');
 
 -- MEDICAMENTOS
 INSERT INTO itens.medicamentos (registromapa, nome, posologia) VALUES
@@ -123,8 +127,9 @@ INSERT INTO itens.medicamentos (registromapa, nome, posologia) VALUES
 (NULL, 'Antibiótico X', '2 vezes ao dia por 7 dias');
 
 -- MEDICAMENTOS BICHOS
-INSERT INTO itens.bichos_medicamentos (idmedicamento, idbicho) VALUES
-(1, 1), (2, 3);
+INSERT INTO itens.bichos_medicamentos (idmedicamento, idbicho, data) VALUES
+(1, 1, CURRENT_TIMESTAMP), 
+(2, 3, CURRENT_TIMESTAMP);
 
 
 -- ENDEREÇOS USUÁRIOS

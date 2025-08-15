@@ -50,8 +50,6 @@ CREATE TABLE enderecos.bairros (
 	nome VARCHAR(70) NOT NULL
 );
 
--- Referências dependem de tabelas ainda não criadas, então criamos depois
-
 -- SCHEMA: estabelecimentos
 CREATE SCHEMA estabelecimentos;
 
@@ -146,7 +144,6 @@ CREATE TABLE bichos.doacoes (
 	FOREIGN KEY (cpfusuario) REFERENCES usuarios.usuarios(cpf)
 );
 
--- Referência agora pode ser feita pois todas as tabelas base existem
 CREATE TABLE enderecos.enderecos (
 	idendereco SERIAL PRIMARY KEY,
 	rua VARCHAR(100) NOT NULL,

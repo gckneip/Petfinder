@@ -35,7 +35,7 @@ st.image("assets/logo.png")
 # ---------------------------
 # Criação das tabs
 # ---------------------------
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["Bichos","Usuários", "Endereços", "Itens", "Doações"])
+tab1, tab2, tab3, tab4, tab5, tab6= st.tabs(["Bichos","Usuários", "Endereços", "Itens", "Doações","Queries SQL"])
 
 
 # ---------------------------
@@ -325,6 +325,18 @@ with tab1:
                 st.rerun()   # <--- força o Streamlit a recarregar tudo
             except Exception as e:
                 st.error(f"Erro ao cadastrar bicho: {e}")
+
+
+with tab6:
+  query = st.text_area("Digite sua query SQL:", "SELECT [columns] FROM [schema].[table]")
+
+  if st.button("Executar consulta"):
+      try:
+          df = run_query(query)
+          st.success("Consulta executada com sucesso!")
+          st.dataframe(df, use_container_width=True)
+      except Exception as e:
+          st.error(f"Erro: {e}")
 
 
 

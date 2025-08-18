@@ -1,4 +1,4 @@
-# Sistema de Adoção de Animais
+# Petfinder
 
 Este projeto é uma aplicação em **Python** com **Streamlit** para gerenciar cadastros relacionados ao cuidado de animais comunitários.  
 Ele permite cadastrar usuários, endereços, doações, itens e animais (bichos), com formulários interativos e abas de navegação.

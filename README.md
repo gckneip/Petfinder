@@ -55,6 +55,18 @@ port = "5432"
 db = "postgres"
 ```
 
+Ou então crie um arquivo `db.json` contendo as configurações necessárias
+
+```json
+{
+  "user": "postgres",
+  "password": "",
+  "host": "localhost",
+  "port": "5432",
+  "db": "postgres"
+}
+```
+
 ### 5. Rodar a aplicação
 
 Execute:

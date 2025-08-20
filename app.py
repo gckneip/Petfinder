@@ -41,8 +41,9 @@ def init_connection():
 engine = init_connection()
 
 # Funções auxiliares
+# Funções auxiliares
 def run_query(query: str):
-    return pd.read_sql(query, engine)
+    return pd.read_sql(text(query), engine)
 
 def insert(query: str, params: dict):
     with engine.begin() as conn:

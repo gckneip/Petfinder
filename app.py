@@ -97,9 +97,15 @@ with tab3:
     with st.form("form_enderecos"):
         # Puxar usuários para dropdown
         usuarios = run_query("SELECT cpf, nome FROM usuarios.usuarios")
+        bairros = run_query("SELECT idbairro, nome FROM enderecos.bairros")
         usuario_selecionado = st.selectbox(
             "Usuário",
             [f"{row.cpf} - {row.nome}" for idx, row in usuarios.iterrows()]
+        )
+
+        bairro_selecionado = st.selectbox(
+            "Bairros",
+            [f"{row.idbairro} - {row.nome}" for idx, row in bairros.iterrows()]
         )
 
         rua = st.text_input("Rua")
@@ -109,12 +115,13 @@ with tab3:
 
         if submitted:
             cpf = usuario_selecionado.split(" - ")[0]
+            idbairro = bairro_selecionado.split(" - ")[0]
             try:
                 insert(
                     """INSERT INTO enderecos.enderecos 
-                    (rua, numero, complemento, cpfusuario) 
-                    VALUES (:rua, :numero, :complemento, :cpfusuario)""",
-                    {"rua": rua, "numero": numero, "complemento": complemento, "cpfusuario": cpf}
+                    (rua, numero, complemento, cpfusuario, idbairro) 
+                    VALUES (:rua, :numero, :complemento, :cpfusuario, :idbairro)""",
+                    {"rua": rua, "numero": numero, "complemento": complemento, "cpfusuario": cpf, "idbairro" : idbairro}
                 )
                 st.success("Endereço cadastrado com sucesso!")
                 st.rerun()   # <--- força o Streamlit a recarregar tudo
@@ -247,9 +254,14 @@ with tab1:
             endereco_opcao = "Novo"
 
     if endereco_opcao == "Novo":
+        bairros = run_query("SELECT idbairro, nome FROM enderecos.bairros")
         rua = st.text_input("Rua")
         numero = st.text_input("Número")
         complemento = st.text_input("Complemento (opcional)")
+        bairro_selecionado = st.selectbox(
+            "Bairros",
+            [f"{row.idbairro} - {row.nome}" for idx, row in bairros.iterrows()]
+        )
 
     with st.form("form_bicho"):
         st.write("Inserir novo bicho")
@@ -273,17 +285,18 @@ with tab1:
                         st.error("Rua e Número são obrigatórios para novo endereço!")
                         st.stop()
                     insert(
-                        """INSERT INTO enderecos.enderecos (rua, numero, complemento, cpfusuario)
-                        VALUES (:rua, :numero, :complemento, :cpfusuario)""",
+                        """INSERT INTO enderecos.enderecos (rua, numero, complemento, cpfusuario, idbairro)
+                        VALUES (:rua, :numero, :complemento, :cpfusuario, :idbairro)""",
                         {
                             "rua": rua,
                             "numero": numero,
                             "complemento": complemento,
-                            "cpfusuario": usuario_cadastro.split(" - ")[0]
+                            "cpfusuario": usuario_cadastro.split(" - ")[0],
+                            "idbairro": bairro_selecionado.split(" - ")[0]
                         }
                     )
                     # Recupera o id do endereço inserido
-                    enderecos = run_query("SELECT idendereco FROM enderecos.enderecos ORDER BY idendereco DESC LIMIT 1")
+                    enderecos = run_query("SELECT idendereco FROM enderecos.enderecos WHERE idbicho is null ORDER BY idendereco DESC LIMIT 1")
                     idendereco = enderecos.iloc[0]["idendereco"]
 
                 if not idendereco:

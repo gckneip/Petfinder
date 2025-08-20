@@ -1,12 +1,13 @@
 -- DOMAIN
 
--- RAÇAS
-INSERT INTO domain.eraca (nome) values
-('Poodle'), ('Labrador'), ('SRD'), ('Angorá'), ('Siamês');
-
 -- ESPÉCIES
 INSERT INTO domain.eespecie (nome) VALUES
 ('Cachorro'), ('Gato'), ('Cavalo'), ('Pombo');
+
+-- RAÇAS
+INSERT INTO domain.eraca (nome,idEspecie) values
+('Poodle',1), ('Labrador',1), (' Gato - SRD',2), ('Angorá', 2), ('Siamês', 2), 
+('Puro Sangue', 3),('Romano', 4), ('Pombo Correio', 4);
 
 -- GRAVIDADES
 INSERT INTO domain.egravidade (nome) VALUES

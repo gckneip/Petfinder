@@ -1,14 +1,15 @@
 -- SCHEMA: Domain
 CREATE SCHEMA domain;
 
-CREATE TABLE domain.eraca (
-	idraca SERIAL PRIMARY KEY,
-	nome VARCHAR(50) NOT NULL
-);
-
 CREATE TABLE domain.eespecie (
 	idespecie SERIAL PRIMARY KEY,
 	nome VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE domain.eraca (
+	idraca SERIAL PRIMARY KEY,
+	nome VARCHAR(50) NOT NULL,
+  	idEspecie INT NOT NULL REFERENCES domain.eespecie(idespecie)
 );
 
 CREATE TABLE domain.egravidade (

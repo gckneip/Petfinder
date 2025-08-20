@@ -87,9 +87,9 @@ with tab2:
 # TAB 2: Endereços
 # ---------------------------
 with tab3:
-    st.subheader("Cadastro de Endereços")
+    st.subheader("Cadastro de Endereços de Usuários")
     try:
-        df = run_query("SELECT * FROM enderecos.enderecos")
+        df = run_query("SELECT e.idendereco, e.rua, e.numero, e.complemento, b.nome Bairro,u.nome NomeUsuario FROM enderecos.enderecos e JOIN enderecos.bairros b ON b.idbairro = e.idbairro JOIN usuarios.usuarios u ON u.cpf = e.cpfusuario WHERE e.cpfusuario IS NOT NULL")
         st.dataframe(df, use_container_width=True)
     except Exception as e:
         st.error(f"Erro ao carregar endereços: {e}")
@@ -164,7 +164,7 @@ with tab4:
 with tab5:
     st.subheader("Registrar Doação")
     try:
-        df = run_query("SELECT * FROM bichos.doacoes")
+        df = run_query("SELECT b.Nome Bicho, u.Nome Usuario, d.data, d.valor FROM bichos.doacoes d JOIN bichos.bichos b ON d.idbicho = b.idbicho JOIN usuarios.usuarios u ON d.cpfusuario = u.cpf")
         df["valor"] = df["valor"].apply(lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
         st.dataframe(df, use_container_width=True)
     except Exception as e:

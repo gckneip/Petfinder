@@ -2,17 +2,40 @@ import streamlit as st
 import pandas as pd
 from sqlalchemy import create_engine, text
 import pydeck as pdk
+import os
+import json
 
 # ---------------------------
 # Configuração da conexão
 # ---------------------------
 @st.cache_resource
 def init_connection():
-    user = "postgres"
-    password = ""
-    host = "localhost"
-    port = "5432"
-    db = "postgres"
+    file_name = "db.json"
+    if os.path.exists(file_name):
+        try:
+            with open(file_name, 'r', encoding='utf-8') as f:
+                db_data = json.load(f)
+
+            user = db_data['user']
+            password = db_data['password']
+            host = db_data['host']
+            port = db_data['port']
+            db = db_data['db']
+
+        except Exception:
+            user = "postgres"
+            password = ""
+            host = "localhost"
+            port = "5432"
+            db = "postgres"
+
+    else:
+        user = "postgres"
+        password = ""
+        host = "localhost"
+        port = "5432"
+        db = "postgres"
+
     return create_engine(f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}")
 
 engine = init_connection()

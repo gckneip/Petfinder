@@ -273,6 +273,8 @@ with tab1:
             [f"{row.idbairro} - {row.nome}" for idx, row in bairros.iterrows()]
         )
 
+    st.write("### Dados do bicho")
+
 # --- Espécie selectbox ---
     st.selectbox(
       "Espécie",

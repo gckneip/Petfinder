@@ -1,10 +1,10 @@
 import streamlit as st
+from code_editor import code_editor
 import pandas as pd
 from sqlalchemy import create_engine, text
 import pydeck as pdk
 import os
 import json
-
 # ---------------------------
 # Configuração da conexão
 # ---------------------------
@@ -388,18 +388,23 @@ with tab1:
 
 
 with tab6:
-  query = st.text_area("Digite sua query SQL:", "SELECT [columns] FROM [schema].[table]")
+  #query = st.text_area("Digite sua query SQL:", "SELECT [columns] FROM [schema].[table]")
+  custom_buttons = [{
+   "name": "Rodar",
+   "feather": "Play",
+   "primary": True,
+   "hasText": True,
+   "alwaysOn": True,
+   "showWithIcon": True,
+   "commands": ["submit"],
+   "style": {"bottom": "0.44rem", "right": "0.4rem"}}]
 
-  if st.button("Executar consulta"):
+  query = code_editor("SELECT * FROM usuarios.usuarios", lang="pgsql", buttons=custom_buttons, height=[10, 20])
+
+  if query['text']:
       try:
-          df = run_query(query)
+          df = run_query(query['text'])
           st.success("Consulta executada com sucesso!")
           st.dataframe(df, use_container_width=True)
       except Exception as e:
           st.error(f"Erro: {e}")
-
-
-
-
-
-

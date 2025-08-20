@@ -205,20 +205,31 @@ with tab5:
 # ---------------------------
 with tab1:
     st.subheader("Cadastro de Bichos")
-   # Exemplo: endereço convertido em coordenadas (pode usar geocoding depois)
-    
+
+    # --- Mostrar tabela de bichos ---
     try:
-        df = run_query("SELECT * FROM bichos.bichos")
+        df = run_query("SELECT b.idbicho,b.nome Nome,e.nome Especie,r.nome Raca,b.sexo,b.cor,b.peso,b.castrado,s.nome UsuarioCadastro FROM bichos.bichos b JOIN domain.eespecie e ON b.especie = e.idespecie JOIN domain.eraca r ON b.raca = r.idraca JOIN usuarios.usuarios s ON b.usuariocadastro = s.cpf")
         st.dataframe(df, use_container_width=True)
     except Exception as e:
         st.error(f"Erro ao carregar bichos: {e}")
 
-    # Opções para FKs
-    racas = run_query("SELECT idraca, nome FROM domain.eraca")
-    especies = run_query("SELECT idespecie, nome FROM domain.eespecie")
+    # --- Buscar opções do DB ---
     usuarios = run_query("SELECT cpf, nome FROM usuarios.usuarios")
     enderecos = run_query("SELECT idendereco, rua, numero, complemento FROM enderecos.enderecos")
+    especies = run_query("SELECT idespecie, nome FROM domain.eespecie")
 
+    # --- Session state para espécie e raças ---
+    if "selected_especie" not in st.session_state:
+        st.session_state.selected_especie = especies["nome"].iloc[0]
+    if "racas" not in st.session_state:
+        st.session_state.racas = pd.DataFrame()
+
+    # Função para atualizar raças ao mudar espécie
+    def update_racas():
+        id_especie = int(especies.loc[especies["nome"] == st.session_state.selected_especie, "idespecie"].values[0])
+        st.session_state.racas = run_query(f"SELECT idraca, nome FROM domain.eraca WHERE idespecie = {id_especie}")
+
+    # --- Endereço ---
     st.write("### Endereço do Bicho")
     latitude = -31.781290618693717
     longitude = -52.32341213609578
@@ -229,7 +240,6 @@ with tab1:
         zoom=12,
         pitch=0,
     )
-
     layer = pdk.Layer(
         "ScatterplotLayer",
         data=[{"lat": latitude, "lon": longitude}],
@@ -237,11 +247,11 @@ with tab1:
         get_color='[200, 30, 0, 160]',
         get_radius=200,
     )
-
     st.pydeck_chart(pdk.Deck(layers=[layer], initial_view_state=view_state))
-    endereco_opcao = st.radio("Escolha um endereço:", ["Existente", "Novo"])
 
+    endereco_opcao = st.radio("Escolha um endereço:", ["Existente", "Novo"])
     idendereco = None
+
     if endereco_opcao == "Existente":
         if len(enderecos) > 0:
             endereco_selecionado = st.selectbox(
@@ -263,11 +273,24 @@ with tab1:
             [f"{row.idbairro} - {row.nome}" for idx, row in bairros.iterrows()]
         )
 
+# --- Espécie selectbox ---
+    st.selectbox(
+      "Espécie",
+      especies["nome"],
+      index=0 if "selected_especie" not in st.session_state else especies["nome"].tolist().index(st.session_state.selected_especie),
+      key="selected_especie"
+    )
+    update_racas()  # Atualiza racas sempre que espécie muda
+
+    # --- Raça selectbox ---
+    raca = st.selectbox(
+        "Raça",
+        st.session_state.racas["nome"].tolist() if not st.session_state.racas.empty else ["Nenhuma disponível"]
+    )
+
+    # --- Form de cadastro ---
     with st.form("form_bicho"):
-        st.write("Inserir novo bicho")
         nome_bicho = st.text_input("Nome do Bicho")
-        raca = st.selectbox("Raça", racas["nome"])
-        especie = st.selectbox("Espécie", especies["nome"])
         sexo = st.selectbox("Sexo", ["M", "F"])
         cor = st.text_input("Cor")
         peso = st.number_input("Peso (kg)", min_value=0.0, step=0.1)
@@ -280,6 +303,7 @@ with tab1:
 
         if submitted:
             try:
+                # Novo endereço
                 if endereco_opcao == "Novo":
                     if not rua or not numero:
                         st.error("Rua e Número são obrigatórios para novo endereço!")
@@ -295,8 +319,7 @@ with tab1:
                             "idbairro": bairro_selecionado.split(" - ")[0]
                         }
                     )
-                    # Recupera o id do endereço inserido
-                    enderecos = run_query("SELECT idendereco FROM enderecos.enderecos WHERE idbicho is null ORDER BY idendereco DESC LIMIT 1")
+                    enderecos = run_query("SELECT idendereco FROM enderecos.enderecos WHERE idbicho IS NULL ORDER BY idendereco DESC LIMIT 1")
                     idendereco = enderecos.iloc[0]["idendereco"]
 
                 if not idendereco:
@@ -304,8 +327,8 @@ with tab1:
                     st.stop()
 
                 # Inserir bicho
-                idraca = int(racas.loc[racas["nome"] == raca, "idraca"].values[0])
-                idespecie = int(especies.loc[especies["nome"] == especie, "idespecie"].values[0])
+                idraca = int(st.session_state.racas.loc[st.session_state.racas["nome"] == raca, "idraca"].values[0])
+                idespecie = int(especies.loc[especies["nome"] == st.session_state.selected_especie, "idespecie"].values[0])
                 cpf_usuario = usuario_cadastro.split(" - ")[0]
 
                 insert(
@@ -325,17 +348,15 @@ with tab1:
                     }
                 )
 
-                # Recupera o id do bicho inserido
+                # Atualiza endereço com id do bicho
                 bicho_id = run_query("SELECT idbicho FROM bichos.bichos ORDER BY idbicho DESC LIMIT 1").iloc[0]["idbicho"]
-                                
-                # Atualiza endereço com o id do bicho
                 insert(
-                    """UPDATE enderecos.enderecos SET idbicho = :idbicho WHERE idendereco = :idendereco""",
+                    "UPDATE enderecos.enderecos SET idbicho = :idbicho WHERE idendereco = :idendereco",
                     {"idbicho": int(bicho_id), "idendereco": int(idendereco)}
                 )
 
                 st.success("Bicho cadastrado com sucesso e associado a um endereço!")
-                st.rerun()   # <--- força o Streamlit a recarregar tudo
+                st.rerun()  # força recarregar
             except Exception as e:
                 st.error(f"Erro ao cadastrar bicho: {e}")
 
